@@ -1,16 +1,18 @@
 module Main where
 
-  import Data.List (union)
+  primes :: [Integer]
+  primes = 2 : filter ((==1) . length . primeFactors) [3, 5..]
 
-  factors :: Integer -> [Integer]
-  factors n = [x | x <- [1..n], n `mod` x == 0]
-
-  prime :: Integer -> Bool
-  prime n = factors n == [1, n]
+  factor :: Integer -> [Integer] -> [Integer]
+  factor n (p : ps)
+            | p * p > n      = [n]
+            | n `mod` p == 0 = p : factor (n `div` p) (p:ps)
+            | otherwise      = factor n ps
 
   primeFactors :: Integer -> [Integer]
-  primeFactors n = filter prime (factors n)
+  primeFactors n = factor n primes
+
 
   main :: IO ()
   main = do
-    putStrLn $ show (primeFactors 1000)
+    putStrLn $ show $ (primeFactors 600851475143)
